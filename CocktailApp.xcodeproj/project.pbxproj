@@ -6,8 +6,19 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		EC181BA52DE6B4B100241AB3 /* Favorito+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC181BA12DE6B4B100241AB3 /* Favorito+CoreDataClass.swift */; };
+		EC181BA62DE6B4B100241AB3 /* Usuario+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC181BA32DE6B4B100241AB3 /* Usuario+CoreDataClass.swift */; };
+		EC181BA72DE6B4B100241AB3 /* Favorito+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC181BA22DE6B4B100241AB3 /* Favorito+CoreDataProperties.swift */; };
+		EC181BA82DE6B4B100241AB3 /* Usuario+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC181BA42DE6B4B100241AB3 /* Usuario+CoreDataProperties.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		EC181B7E2DE6B25D00241AB3 /* CocktailApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CocktailApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EC181BA12DE6B4B100241AB3 /* Favorito+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Favorito+CoreDataClass.swift"; sourceTree = "<group>"; };
+		EC181BA22DE6B4B100241AB3 /* Favorito+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Favorito+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		EC181BA32DE6B4B100241AB3 /* Usuario+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Usuario+CoreDataClass.swift"; sourceTree = "<group>"; };
+		EC181BA42DE6B4B100241AB3 /* Usuario+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Usuario+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -45,6 +56,10 @@
 		EC181B752DE6B25D00241AB3 = {
 			isa = PBXGroup;
 			children = (
+				EC181BA12DE6B4B100241AB3 /* Favorito+CoreDataClass.swift */,
+				EC181BA22DE6B4B100241AB3 /* Favorito+CoreDataProperties.swift */,
+				EC181BA32DE6B4B100241AB3 /* Usuario+CoreDataClass.swift */,
+				EC181BA42DE6B4B100241AB3 /* Usuario+CoreDataProperties.swift */,
 				EC181B802DE6B25D00241AB3 /* CocktailApp */,
 				EC181B7F2DE6B25D00241AB3 /* Products */,
 			);
@@ -132,6 +147,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EC181BA52DE6B4B100241AB3 /* Favorito+CoreDataClass.swift in Sources */,
+				EC181BA62DE6B4B100241AB3 /* Usuario+CoreDataClass.swift in Sources */,
+				EC181BA72DE6B4B100241AB3 /* Favorito+CoreDataProperties.swift in Sources */,
+				EC181BA82DE6B4B100241AB3 /* Usuario+CoreDataProperties.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

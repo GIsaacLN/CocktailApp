@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -13,12 +14,26 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        guard let _ = (scene as? UIWindowScene) else { return }
-    }
+        // 1. Seed de usuario de prueba
+        let ctx = CoreDataStack.shared.context
+        let req: NSFetchRequest<Usuario> = Usuario.fetchRequest()
+        if (try? ctx.count(for: req)) == 0 {
+            let u = Usuario(context: ctx)
+            u.username = "testuser"
+            // contraseña “password123” en Base
+            u.password = Data("password123".utf8).base64EncodedString()
+            CoreDataStack.shared.saveContext()
+            print("✅ Usuario semillado: testuser / password123")
+        }
 
+        // 2. Inicia módulo de login
+        guard let ws = (scene as? UIWindowScene) else { return }
+        let window = UIWindow(windowScene: ws)
+        let login = LoginRouter.createModule()
+        window.rootViewController = UINavigationController(rootViewController: login)
+        self.window = window
+        window.makeKeyAndVisible()
+    }
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.
         // This occurs shortly after the scene enters the background, or when its session is discarded.
