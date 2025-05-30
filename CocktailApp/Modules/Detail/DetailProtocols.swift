@@ -17,13 +17,14 @@ protocol DetailPresenterProtocol: AnyObject {
     var view: DetailViewProtocol? { get set }
     var interactor: DetailInteractorProtocol? { get set }
     var router: DetailRouterProtocol? { get set }
-    var cocktailID: String? { get set }
+    var cocktail: Cocktail? { get set }
     func loadDetail()
     func toggleFavorite()
 }
 
 protocol DetailInteractorProtocol: AnyObject {
     var presenter: DetailInteractorOutputProtocol? { get set }
+    var initialCocktail: Cocktail? { get set }
     func fetchDetail(id: String)
     func updateFavorite(_ cocktail: Cocktail)
 }
@@ -34,5 +35,5 @@ protocol DetailInteractorOutputProtocol: AnyObject {
 }
 
 protocol DetailRouterProtocol: AnyObject {
-    static func createModule(cocktailID: String) -> UIViewController
+    static func createModule(with cocktail: Cocktail) -> UIViewController
 }

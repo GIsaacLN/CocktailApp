@@ -13,12 +13,12 @@ class MainInteractor: MainInteractorProtocol {
     private let api        = NetworkManager.shared
     private let favService = FavoriteService()
 
-    func fetchCocktails() {
-        api.request(endpoint: .search(letter: "a")) { (res: Result<APIResponse<Cocktail>, Error>) in
+    func fetchCocktails(letter: Character) {
+        api.request(endpoint: .search(letter: letter)) { (res: Result<APIResponse<Cocktail>, Error>) in
             switch res {
             case .success(let resp):
                 let list = resp.drinks ?? []
-                self.presenter?.cocktailsFetched(list)
+                self.presenter?.cocktailsFetched(list, for: letter)
             case .failure:
                 self.presenter?.cocktailsFetchFailed("Error cargando cócteles.")
             }

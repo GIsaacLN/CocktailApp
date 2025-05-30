@@ -35,7 +35,6 @@ struct Cocktail: Codable {
         thumbURL     = try c.decode(String.self, forKey: .thumbURL)
         instructions = try c.decodeIfPresent(String.self, forKey: .instructions)
         
-        // ingredientes dinámicos
         let raw = try decoder.container(keyedBy: DynamicKey.self)
         var ingr: [String] = []
         for i in 1...15 {

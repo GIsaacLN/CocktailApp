@@ -9,20 +9,23 @@
 import UIKit
 
 class DetailRouter: DetailRouterProtocol {
-    static func createModule(cocktailID: String) -> UIViewController {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let view = storyboard.instantiateViewController(identifier: "DetailVC") as! DetailViewController
+    static func createModule(with cocktail: Cocktail) -> UIViewController {
+        let sb   = UIStoryboard(name: "Main", bundle: nil)
+        let view = sb.instantiateViewController(identifier: "DetailVC") as! DetailViewController
+
         let presenter = DetailPresenter()
         let interactor = DetailInteractor()
         let router = DetailRouter()
 
-        view.presenter = presenter
-        presenter.view = view
-        presenter.interactor = interactor
-        presenter.router = router
-        presenter.cocktailID = cocktailID
-        interactor.presenter = presenter
+        view.presenter        = presenter
+        presenter.view        = view
+        presenter.interactor  = interactor
+        presenter.router      = router
 
+        presenter.cocktail    = cocktail
+        interactor.initialCocktail = cocktail
+
+        interactor.presenter  = presenter
         return view
     }
 }

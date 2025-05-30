@@ -17,13 +17,33 @@ class DetailViewController: UIViewController, DetailViewProtocol {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            image: UIImage(systemName: "heart"), style: .plain,
-            target: self, action: #selector(toggleFavorite)
+        let favItem = UIBarButtonItem(
+          image: UIImage(systemName: "heart"),
+          style: .plain,
+          target: self,
+          action: #selector(toggleFavorite)
         )
+        navigationItem.rightBarButtonItems = [favItem]
+
+        enableSignOutButton()
+
         ingredientsListLabel.numberOfLines = 0
         instructionsLabel.numberOfLines = 0
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(favoritesDidChange),
+            name: .favoritesUpdated,
+            object: nil
+        )
         presenter?.loadDetail()
+    }
+
+    @objc private func favoritesDidChange() {
+        presenter?.loadDetail()
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
     @objc func toggleFavorite() {
@@ -31,32 +51,37 @@ class DetailViewController: UIViewController, DetailViewProtocol {
     }
 
     func showDetail(_ cocktail: Cocktail) {
-        let cocktailID = cocktail.id
         DispatchQueue.main.async {
+            let cocktailID = cocktail.id
             self.title = cocktail.name
             self.categoryLabel.text = cocktail.category
             self.instructionsLabel.text = cocktail.instructions
             self.ingredientsListLabel.text = "• " + (cocktail.ingredients?.joined(separator: "\n• ") ?? "No tiene ingredientes")
-            self.imageView.image = UIImage(systemName: "photo") // placeholder
+            self.imageView.image = UIImage(systemName: "photo")
             
-            // carga asíncrona de la imagen
-            guard let url = URL(string: cocktail.thumbURL) else { return }
-            URLSession.shared.dataTask(with: url) { data, _, _ in
-                guard let data = data, let img = UIImage(data: data) else { return }
-                DispatchQueue.main.async {
-                    // sólo la pongo si la celda sigue representando el mismo cóctel
-                    if cocktailID == cocktail.id {
-                        self.imageView.image = img
+            let urlKey = cocktail.thumbURL as NSString
+
+            if let cached = ImageCache.shared.object(forKey: urlKey) {
+                self.imageView.image = cached
+            } else {
+                self.imageView.image = UIImage(systemName: "photo")
+                URLSession.shared.dataTask(with: URL(string: cocktail.thumbURL)!) { data, _, _ in
+                    guard let data = data, let img = UIImage(data: data) else { return }
+                    ImageCache.shared.setObject(img, forKey: urlKey)
+                    DispatchQueue.main.async {
+                        if cocktailID == cocktail.id {
+                            self.imageView.image = img
+                        }
                     }
-                }
-            }.resume()
+                }.resume()
+            }
         }
     }
 
     func updateFavoriteState(isFav: Bool) {
         let sys = isFav ? "heart.fill" : "heart"
         DispatchQueue.main.async {
-            self.navigationItem.rightBarButtonItem?.image = UIImage(systemName: sys)
+            self.navigationItem.rightBarButtonItems?[1].image = UIImage(systemName: sys)
         }
     }
 

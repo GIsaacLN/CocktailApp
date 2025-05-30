@@ -31,5 +31,5 @@ protocol FavoritesInteractorOutputProtocol: AnyObject {
 }
 
 protocol FavoritesRouterProtocol: AnyObject {
-    func showDetail(from view: FavoritesViewProtocol, with id: String)
+    func showDetail(from view: FavoritesViewProtocol, with cocktail: Cocktail)
 }

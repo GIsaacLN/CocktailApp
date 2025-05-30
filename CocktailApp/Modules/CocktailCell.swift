@@ -8,7 +8,6 @@
 import UIKit
 
 protocol CocktailCellDelegate: AnyObject {
-    /// El usuario pulsó el botón de favorito en esta celda
     func cocktailCell(_ cell: CocktailCell, didTapFavoriteFor cocktailID: String)
 }
 
@@ -31,21 +30,25 @@ class CocktailCell: UITableViewCell {
         titleView.text       = cocktail.name
         categoryLabel.text   = cocktail.category
         favButton.isSelected = isFavorite
-        cocktailImageView.image = UIImage(systemName: "photo")
-        
-        // carga asíncrona de la imagen
-        guard let url = URL(string: cocktail.thumbURL) else { return }
-        URLSession.shared.dataTask(with: url) { data, _, _ in
-            guard let data = data, let img = UIImage(data: data) else { return }
-            DispatchQueue.main.async {
-                // sólo la pongo si la celda sigue representando el mismo cóctel
-                if self.cocktailID == cocktail.id {
-                    self.cocktailImageView.image = img
+
+        let urlKey = cocktail.thumbURL as NSString
+
+        if let cached = ImageCache.shared.object(forKey: urlKey) {
+            cocktailImageView.image = cached
+        } else {
+            cocktailImageView.image = UIImage(systemName: "photo")
+            URLSession.shared.dataTask(with: URL(string: cocktail.thumbURL)!) { data, _, _ in
+                guard let data = data, let img = UIImage(data: data) else { return }
+                ImageCache.shared.setObject(img, forKey: urlKey)
+                DispatchQueue.main.async {
+                    if self.cocktailID == cocktail.id {
+                        self.cocktailImageView.image = img
+                    }
                 }
-            }
-        }.resume()
+            }.resume()
+        }
     }
-    
+
     
     @IBAction func isFavoriteButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()

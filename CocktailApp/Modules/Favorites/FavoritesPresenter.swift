@@ -20,7 +20,7 @@ class FavoritesPresenter: FavoritesPresenterProtocol {
 
     func didSelectItem(at indexPath: IndexPath) {
         let fav = items[indexPath.row]
-        router?.showDetail(from: view!, with: fav.id)
+        router?.showDetail(from: view!, with: fav)
     }
     
     func toggleFavorite(_ cocktail: Cocktail) {

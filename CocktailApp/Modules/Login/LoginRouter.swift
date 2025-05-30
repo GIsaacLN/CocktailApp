@@ -29,8 +29,15 @@ class LoginRouter: LoginRouterProtocol {
     }
 
     func showMainModule() {
-        guard let vc = view as? UIViewController else { return }
+        guard
+          let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+          let delegate = scene.delegate as? SceneDelegate,
+          let window = delegate.window
+        else { return }
+
         let mainTab = MainRouter.createModule()
-        vc.navigationController?.setViewControllers([mainTab], animated: true)
+
+        window.rootViewController = mainTab
+        window.makeKeyAndVisible()
     }
 }

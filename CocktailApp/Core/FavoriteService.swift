@@ -8,6 +8,10 @@
 
 import CoreData
 
+extension Notification.Name {
+    static let favoritesUpdated = Notification.Name("favoritesUpdated")
+}
+
 protocol FavoriteServiceProtocol {
     func isFavorite(id: String) -> Bool
     func toggleFavorite(_ cocktail: Cocktail)
@@ -37,6 +41,7 @@ class FavoriteService: FavoriteServiceProtocol {
             fav.thumbURL     = cocktail.thumbURL
         }
         CoreDataStack.shared.saveContext()
+        NotificationCenter.default.post(name: .favoritesUpdated, object: nil)
     }
 
     func fetchAll() -> [Cocktail] {

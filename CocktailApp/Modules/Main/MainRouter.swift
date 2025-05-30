@@ -21,7 +21,6 @@ class MainRouter: MainRouterProtocol {
             return tabBar
         }
         
-        // 1st tab: Cocktails
         let cocktailsNav = tabs[0]
         if let cocktailsVC = cocktailsNav.viewControllers.first as? MainViewController {
             let presenter = MainPresenter()
@@ -36,7 +35,6 @@ class MainRouter: MainRouterProtocol {
             router.view              = cocktailsVC
         }
         
-        // 2nd tab: Favorites
         let favsNav  = tabs[1]
         if let favsVC = favsNav.viewControllers.first as? FavoritesViewController {
             let presenter = FavoritesPresenter()
@@ -54,9 +52,9 @@ class MainRouter: MainRouterProtocol {
         return tabBar
     }
     
-    func showDetail(from view: MainViewProtocol, with id: String) {
+    func showDetail(from view: MainViewProtocol, with cocktail: Cocktail) {
         guard let vc = view as? UIViewController else { return }
-        let detailVC = DetailRouter.createModule(cocktailID: id)
+        let detailVC = DetailRouter.createModule(with: cocktail)
         vc.navigationController?.pushViewController(detailVC, animated: true)
     }
 }

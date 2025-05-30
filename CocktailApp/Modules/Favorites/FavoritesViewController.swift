@@ -16,19 +16,75 @@ class FavoritesViewController: UITableViewController, FavoritesViewProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Favoritos"
+        enableSignOutButton()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(favoritesDidChange),
+            name: .favoritesUpdated,
+            object: nil
+        )
         presenter?.loadFavorites()
     }
-    
-    @objc func signOut() {
-        let alert = UIAlertController(title: "Aviso", message: "Deseas salir de la aplicación", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Cancelar", style: .cancel))
-        alert.addAction(UIAlertAction(title: "Aceptar", style: .destructive) { _ in exit(0) })
-        present(alert, animated: true)
+
+    @objc private func favoritesDidChange() {
+        presenter?.loadFavorites()
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
-    func showFavorites(_ items: [Cocktail]) {
-        self.items = items
-        tableView.reloadData()
+    func showFavorites(_ newItems: [Cocktail]) {
+        let oldItems = items
+        
+        let oldIDs = oldItems.map { $0.id }
+        let newIDs = newItems.map { $0.id }
+        
+        var deletes: [IndexPath] = []
+        for (idx, id) in oldIDs.enumerated() where !newIDs.contains(id) {
+            deletes.append(IndexPath(row: idx, section: 0))
+        }
+        
+        var inserts: [IndexPath] = []
+        for (idx, id) in newIDs.enumerated() where !oldIDs.contains(id) {
+            inserts.append(IndexPath(row: idx, section: 0))
+        }
+        
+        items = newItems
+        
+        tableView.beginUpdates()
+        tableView.deleteRows(at: deletes,   with: .automatic)
+        tableView.insertRows(at: inserts,   with: .automatic)
+        tableView.endUpdates()
+        
+        updateBackgroundView()
+    }
+
+    private func updateBackgroundView() {
+        if items.isEmpty {
+            let lbl = UILabel()
+            lbl.text = "Aún no tienes favoritos.\nAgrega algunos desde la sección de cócteles."
+            lbl.textColor = .gray
+            lbl.numberOfLines = 0
+            lbl.textAlignment = .center
+            lbl.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+            lbl.translatesAutoresizingMaskIntoConstraints = false
+
+            let bg = UIView(frame: tableView.bounds)
+            bg.addSubview(lbl)
+            NSLayoutConstraint.activate([
+                lbl.centerXAnchor.constraint(equalTo: bg.centerXAnchor),
+                lbl.centerYAnchor.constraint(equalTo: bg.centerYAnchor),
+                lbl.leadingAnchor.constraint(greaterThanOrEqualTo: bg.leadingAnchor, constant: 20),
+                lbl.trailingAnchor.constraint(lessThanOrEqualTo: bg.trailingAnchor, constant: -20),
+            ])
+
+            tableView.backgroundView = bg
+            tableView.separatorStyle = .none
+        } else {
+            tableView.backgroundView = nil
+            tableView.separatorStyle = .singleLine
+        }
     }
     
     override func tableView(_ tv: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -67,7 +123,6 @@ class FavoritesViewController: UITableViewController, FavoritesViewProtocol {
 extension FavoritesViewController: CocktailCellDelegate {
     func cocktailCell(_ cell: CocktailCell, didTapFavoriteFor cocktailID: String) {
         guard let cocktail = items.first(where: { $0.id == cocktailID }) else { return }
-        // 2) Le pedimos al Presenter que togglee ese Cocktail
         presenter?.toggleFavorite(cocktail)
     }
 }

@@ -12,72 +12,78 @@ class MainViewController: UITableViewController, MainViewProtocol {
     
     private var cocktails: [Cocktail] = []
     private var favoriteIDs = Set<String>()
-    
+    private let spinner = UIActivityIndicatorView(style: .medium)
+
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Cócteles"
-        // 2) carga primero los favoritos guardados y luego los cócteles
-        presenter?.loadFavoritesIDs()
-        presenter?.loadCocktails()
+        tableView.tableFooterView = spinner
+        enableSignOutButton()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(favoritesDidChange),
+            name: .favoritesUpdated,
+            object: nil
+        )
+        presenter?.loadInitialData()
+    }
+    
+    @objc private func favoritesDidChange() {
+        presenter?.loadFavoriteIDs()
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     func showCocktails(_ items: [Cocktail]) {
-        cocktails = items
+        self.cocktails = items
         DispatchQueue.main.async { self.tableView.reloadData() }
     }
-    
+
     func showError(_ message: String) {
         let a = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-        a.addAction(UIAlertAction(title: "OK", style: .default))
+        a.addAction(.init(title: "OK", style: .default))
         present(a, animated: true)
     }
-    
+
     func updateFavoriteIDs(_ ids: [String]) {
         favoriteIDs = Set(ids)
         DispatchQueue.main.async { self.tableView.reloadData() }
     }
-    
-    // MARK: - Table
+
+    func showLoadingIndicator(_ show: Bool) {
+        DispatchQueue.main.async {
+            show ? self.spinner.startAnimating() : self.spinner.stopAnimating()
+        }
+    }
     
     override func tableView(_ tv: UITableView, numberOfRowsInSection section: Int) -> Int {
         cocktails.count
     }
-    
-    override func tableView(_ tv: UITableView,
-                            cellForRowAt indexPath: IndexPath) -> UITableViewCell
-    {
-        guard let cell = tv.dequeueReusableCell(withIdentifier: "CocktailCell", for: indexPath) as? CocktailCell else {
-            fatalError("Couldn't deque to CocktailCell")
-        }
-        let cocktail = cocktails[indexPath.row]
 
+    override func tableView(_ tv: UITableView, cellForRowAt ip: IndexPath) -> UITableViewCell {
+        let cell = tv.dequeueReusableCell(withIdentifier: "CocktailCell", for: ip) as! CocktailCell
+        let c = cocktails[ip.row]
         cell.delegate = self
-        let isFav = favoriteIDs.contains(cocktail.id)
-        cell.configure(with: cocktail, isFavorite: isFav)
+        cell.configure(with: c, isFavorite: favoriteIDs.contains(c.id))
         return cell
     }
-    
-    override func tableView(_ tv: UITableView, didSelectRowAt indexPath: IndexPath) {
-        presenter?.didSelectItem(at: indexPath)
+
+    override func tableView(_ tv: UITableView, didSelectRowAt ip: IndexPath) {
+        presenter?.didSelectItem(at: ip)
     }
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
-    
+
+    override func tableView(_ tv: UITableView, willDisplay cell: UITableViewCell, forRowAt ip: IndexPath) {
+        if ip.row == cocktails.count - 1 {
+            presenter?.loadMoreCocktails()
+        }
+    }
 }
 
 extension MainViewController: CocktailCellDelegate {
     func cocktailCell(_ cell: CocktailCell, didTapFavoriteFor cocktailID: String) {
-        // 1) Buscamos el Cocktail en nuestro array
-        guard let cocktail = cocktails.first(where: { $0.id == cocktailID }) else { return }
-        // 2) Le pedimos al Presenter que togglee ese Cocktail
-        presenter?.toggleFavorite(cocktail)
+        guard let c = cocktails.first(where: { $0.id == cocktailID }) else { return }
+        presenter?.toggleFavorite(c)
     }
 }

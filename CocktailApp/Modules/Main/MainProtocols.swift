@@ -11,33 +11,35 @@ protocol MainViewProtocol: AnyObject {
     func showCocktails(_ items: [Cocktail])
     func showError(_ message: String)
     func updateFavoriteIDs(_ ids: [String])
+    func showLoadingIndicator(_ show: Bool)
+    
 }
 
 protocol MainPresenterProtocol: AnyObject {
     var view: MainViewProtocol?            { get set }
     var interactor: MainInteractorProtocol? { get set }
     var router: MainRouterProtocol?        { get set }
-
-    func loadCocktails()
+    func loadInitialData()
+    func loadMoreCocktails()
     func didSelectItem(at indexPath: IndexPath)
-    func loadFavoritesIDs()
-    func toggleFavorite(_ cocktail: Cocktail)    // ← cambiamos firma
+    func toggleFavorite(_ cocktail: Cocktail)
+    func loadFavoriteIDs()
 }
 
 protocol MainInteractorProtocol: AnyObject {
     var presenter: MainInteractorOutputProtocol? { get set }
-    func fetchCocktails()
+    func fetchCocktails(letter: Character)
     func fetchFavoriteIDs()
     func updateFavorite(_ cocktail: Cocktail)
 }
 
 protocol MainInteractorOutputProtocol: AnyObject {
-    func cocktailsFetched(_ drinks: [Cocktail])
+    func cocktailsFetched(_ drinks: [Cocktail], for letter: Character)
     func cocktailsFetchFailed(_ error: String)
     func favoriteIDsFetched(_ ids: [String])
 }
 
 protocol MainRouterProtocol: AnyObject {
     static func createModule() -> UITabBarController
-    func showDetail(from view: MainViewProtocol, with id: String)
+    func showDetail(from view: MainViewProtocol, with cocktail: Cocktail)
 }
