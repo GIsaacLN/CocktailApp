@@ -65,4 +65,13 @@ En `SceneDelegate` se siembra un usuario ficticio la primera vez que arrancas:
 
 ---
 
+## Capturas de Pantalla
+
+<img src="https://github.com/user-attachments/assets/068fd4c4-1338-444f-a645-09f37d0fa0a0" alt="Inicio de Sesion" width="300"/>
+<img src="https://github.com/user-attachments/assets/fbd77013-3ba2-48a9-8924-f0004b3cbd39" alt="Principal" width="300"/>
+<img src="https://github.com/user-attachments/assets/9ffb87b3-12e3-4217-89a4-61b6e3f3f7aa" alt="Favoritos" width="300"/>
+<img src="https://github.com/user-attachments/assets/d3b65dbf-e344-46e7-9bfa-68dc24d55663" alt="Detalle" width="300"/>
+
+---
+
 ¡Gracias por revisar mi prueba! Cualquier duda, por favor házmelo saber.
