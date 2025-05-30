@@ -7,7 +7,8 @@
 
 import UIKit
 
-class LoginViewController: UIViewController, LoginViewProtocol {
+class LoginViewController: UIViewController, LoginViewProtocol,
+                           UITextFieldDelegate {
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     var presenter: LoginPresenterProtocol?
@@ -22,11 +23,37 @@ class LoginViewController: UIViewController, LoginViewProtocol {
         originalUsernamePlaceholder = usernameTextField.placeholder
         originalPasswordPlaceholder = passwordTextField.placeholder
 
+        usernameTextField.delegate = self
+        passwordTextField.delegate = self
+
+        let tap = UITapGestureRecognizer(target: self,
+                                         action: #selector(dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+
         [usernameTextField, passwordTextField].forEach {
             $0.layer.cornerRadius = 4
             $0.layer.masksToBounds = true
             $0.layer.borderWidth = 0
         }
+    }
+    
+    // MARK: –– Teclado
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
+    }
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        switch textField {
+        case usernameTextField:
+            passwordTextField.becomeFirstResponder()
+        case passwordTextField:
+            textField.resignFirstResponder()
+            loginButtonTapped(UIButton())
+        default:
+            textField.resignFirstResponder()
+        }
+        return true
     }
 
     @IBAction func loginButtonTapped(_ sender: UIButton) {
