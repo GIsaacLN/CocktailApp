@@ -56,7 +56,7 @@ class DetailViewController: UIViewController, DetailViewProtocol {
             self.title = cocktail.name
             self.categoryLabel.text = cocktail.category
             self.instructionsLabel.text = cocktail.instructions
-            self.ingredientsListLabel.text = "• " + (cocktail.ingredients?.joined(separator: "\n• ") ?? "No tiene ingredientes")
+            self.ingredientsListLabel.text = "• " + (cocktail.ingredients.joined(separator: "\n• "))
             self.imageView.image = UIImage(systemName: "photo")
             
             let urlKey = cocktail.thumbURL as NSString

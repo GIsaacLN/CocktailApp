@@ -61,7 +61,7 @@ class LoginViewController: UIViewController, LoginViewProtocol {
             (usernameTextField, originalUsernamePlaceholder),
             (passwordTextField, originalPasswordPlaceholder)
         ]
-        for (tf, original) in fields {
+        for (tf, _) in fields {
             if tf.text?.isEmpty ?? true {
                 tf.layer.borderColor = UIColor.red.cgColor
                 tf.layer.borderWidth = 1

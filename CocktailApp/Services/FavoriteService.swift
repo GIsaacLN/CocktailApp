@@ -39,6 +39,8 @@ class FavoriteService: FavoriteServiceProtocol {
             fav.name         = cocktail.name
             fav.category     = cocktail.category
             fav.thumbURL     = cocktail.thumbURL
+            fav.ingredients = cocktail.ingredients
+            fav.instructions = cocktail.instructions
         }
         CoreDataStack.shared.saveContext()
         NotificationCenter.default.post(name: .favoritesUpdated, object: nil)
@@ -55,8 +57,8 @@ class FavoriteService: FavoriteServiceProtocol {
                     name:         name,
                     category:     f.category ?? "",
                     thumbURL:     f.thumbURL ?? "",
-                    instructions: nil,
-                    ingredients:  nil
+                    instructions: f.instructions ?? "",
+                    ingredients:  f.ingredients ?? [String]()
                 )
                 cocktails.append(cocktail)
             }

@@ -14,19 +14,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // 1. Seed de usuario de prueba
+        // MARK: - Datos de usuario de prueba
         let ctx = CoreDataStack.shared.context
         let req: NSFetchRequest<Usuario> = Usuario.fetchRequest()
         if (try? ctx.count(for: req)) == 0 {
             let u = Usuario(context: ctx)
-            u.username = "testuser"
+            u.username = "user"
             // contraseña “password123” en Base
-            u.password = Data("password123".utf8).base64EncodedString()
+            u.password = Data("password".utf8).base64EncodedString()
             CoreDataStack.shared.saveContext()
-            print("✅ Usuario semillado: testuser / password123")
+            print("Usuario semillado: user / password")
         }
 
-        // 2. Inicia módulo de login
         guard let ws = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: ws)
         let login = LoginRouter.createModule()

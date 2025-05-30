@@ -16,8 +16,8 @@ struct Cocktail: Codable {
     let name: String
     let category: String
     let thumbURL: String
-    let instructions: String?
-    let ingredients: [String]?
+    let instructions: String
+    let ingredients: [String]
     
     enum CodingKeys: String, CodingKey {
         case id           = "idDrink"
@@ -33,7 +33,7 @@ struct Cocktail: Codable {
         name         = try c.decode(String.self, forKey: .name)
         category     = try c.decode(String.self, forKey: .category)
         thumbURL     = try c.decode(String.self, forKey: .thumbURL)
-        instructions = try c.decodeIfPresent(String.self, forKey: .instructions)
+        instructions = try c.decode(String.self, forKey: .instructions)
         
         let raw = try decoder.container(keyedBy: DynamicKey.self)
         var ingr: [String] = []
@@ -44,13 +44,13 @@ struct Cocktail: Codable {
             else { continue }
             ingr.append(v)
         }
-        ingredients = ingr.isEmpty ? nil : ingr
+        ingredients = ingr
     }
 }
 
 typealias CocktailModel = Cocktail
 extension CocktailModel {
-    init(id: String, name: String, category: String, thumbURL: String, instructions: String? = nil, ingredients: [String]? = nil) {
+    init(id: String, name: String, category: String, thumbURL: String, instructions: String, ingredients: [String]) {
         self.id = id
         self.name = name
         self.category = category

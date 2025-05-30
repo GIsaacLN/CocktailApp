@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23231" systemVersion="24B5070a" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="Favorito" representedClassName="Favorito" syncable="YES">
+    <entity name="Favorito" representedClassName="Favorito" syncable="YES" codeGenerationType="class">
         <attribute name="category" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="String"/>
-        <attribute name="ingredients" optional="YES" attributeType="Transformable" customClassName="NSArray"/>
+        <attribute name="ingredients" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformerName" customClassName="[String]"/>
         <attribute name="instructions" optional="YES" attributeType="String"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="thumbURL" optional="YES" attributeType="String"/>
     </entity>
-    <entity name="Usuario" representedClassName="Usuario" syncable="YES">
+    <entity name="Usuario" representedClassName="Usuario" syncable="YES" codeGenerationType="class">
         <attribute name="password" optional="YES" attributeType="String"/>
         <attribute name="username" optional="YES" attributeType="String"/>
     </entity>
