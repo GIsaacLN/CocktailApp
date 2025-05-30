@@ -5,28 +5,11 @@ Una aplicación iOS de ejemplo desarrollada con arquitectura **VIPER** y **Story
 ---
 
 ## 📋 Características
+La pantalla de Login gestiona usuarios almacenados en Core Data, cifra contraseñas en Base64 y resalta en rojo los campos vacíos para mejorar la validación. En el Listado Principal, se despliega un UITableView con paginación por letra (f=a…z), mostrando la imagen, el nombre, la categoría y un botón para marcar favoritos.
 
-* **Login**
+La Vista de Detalle carga la imagen, la lista de ingredientes y las instrucciones de cada cóctel, además de reflejar al instante el estado de favorito gracias a un caché en memoria con NSCache. La sección de Favoritos muestra los cócteles guardados en Core Data y emplea animaciones de inserción y borrado para actualizar la tabla sin recargas completas.
 
-  * Usuarios guardados en Core Data
-  * Contraseña en Base64
-  * Validación de campos vacíos (resaltados en rojo)
-* **Listado Principal**
-
-  * UITableView con paginación “por letra” (f=a…z)
-  * Muestra imagen, nombre, categoría y botón de favorito
-* **Detalle de Cóctel**
-
-  * Imagen, ingredientes, instrucciones y estado de favorito
-  * Carga rápida con caché en memoria (`NSCache`)
-* **Favoritos**
-
-  * Lista de cócteles guardados en Core Data
-  * Animaciones de inserción/borrado sin recargar toda la tabla
-* **Salir**
-
-  * Botón “Salir” en la NavBar de todas las vistas
-  * Alerta “Aviso” con “Cancelar” y “Aceptar” (cerrar app)
+Por último, un botón Salir aparece en la barra de navegación de todas las vistas, lanzando una alerta de confirmación que permite cerrar la aplicación de forma sencilla
 
 ---
 
@@ -83,6 +66,3 @@ En `SceneDelegate` se siembra un usuario ficticio la primera vez que arrancas:
 ---
 
 ¡Gracias por revisar mi prueba! Cualquier duda, por favor házmelo saber.
-
-
-
